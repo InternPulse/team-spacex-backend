@@ -12,7 +12,7 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    url='https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev'
+    # url='https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev' # Ignore this line
 )
 
 urlpatterns = [
