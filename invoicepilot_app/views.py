@@ -4,11 +4,11 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .models import Profile, Invoice, PaymentTransaction, InvoiceItem, ClientContact, Notification, RecurringInvoiceSchedule
-from .serializers import ProfileSerializer, InvoiceSerializer, UserCreateSerializer, PaymentTransactionSerializer, InvoiceItemSerializer, ClientContactSerializer, NotificationSerializer, RecurringInvoiceScheduleSerializer
+from .serializers import ProfileSerializer, InvoiceSerializer, OurUserCreateSerializer, PaymentTransactionSerializer, InvoiceItemSerializer, ClientContactSerializer, NotificationSerializer, RecurringInvoiceScheduleSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class SignUp(generics.CreateAPIView):
-    serializer_class = UserCreateSerializer
+    serializer_class = OurUserCreateSerializer
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
@@ -27,7 +27,7 @@ class MyAccount(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user.profile
 
 class Login(generics.CreateAPIView):
-    serializer_class = UserCreateSerializer
+    serializer_class = OurUserCreateSerializer
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
@@ -94,3 +94,13 @@ class RecurringInvoiceScheduleListCreateView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+class TestMailerView(generics.RetrieveAPIView):
+    serializer_class = InvoiceSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        from invoicepilot_app.mailer import Invoice, send_email_with_pdf
+        iv = Invoice.objects.get(id=1)
+        sent = send_email_with_pdf('Invoice', 'Here is the summary of your order', b'pdf content', iv)
+        return Response({'message': 'Mail sent'} if sent else {'message': 'Mail not sent'})
