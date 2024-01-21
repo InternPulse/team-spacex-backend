@@ -43,7 +43,7 @@ class RecurringInvoiceScheduleSerializer(serializers.ModelSerializer):
         model = RecurringInvoiceSchedule
         fields = '__all__'
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class OurUserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('username', 'password')
