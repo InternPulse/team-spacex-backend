@@ -14,14 +14,16 @@ class InvoiceItem(models.Model):
     description = models.CharField(max_length=255)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
     date_created = models.DateTimeField(auto_now_add=True)
-    invoice_date_generated = models.DateTimeField()
+    invoice_date_generated = models.DateTimeField(auto_now=True)
     
     @property
-    def total_price(self):
-        return self.quantity * self.price
-    # Add more fields as needed
-
+    def total_price_calc(self):
+        self.total_price = self.quantity * self.price
+        self.save()
+        return self.total_price
+        
 class ClientContact(models.Model):
     # user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
