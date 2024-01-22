@@ -56,6 +56,8 @@ These instructions will get you a copy of the project up and running on your loc
    
 2. Explore the Invoice API at [http://127.0.0.1:8000/api/invoices/](http://127.0.0.1:8000/api/invoices/).
 
+3.  Convert Item invoice to pdf at [http://127.0.0.1:8000/api/generate_invoice_pdf/<int:pk>/](http://127.0.0.1:8000/api/generate_invoice_pdf/<int:pk>/).
+
 ## Collaboration Workflow
 
 We use Git for version control and follow a collaborative workflow:

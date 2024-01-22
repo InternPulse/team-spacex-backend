@@ -10,10 +10,12 @@ class PaymentTransaction(models.Model):
     # Add more fields as needed
 
 class InvoiceItem(models.Model):
-    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE, related_name='items')
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=255)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    date_created = models.DateTimeField(auto_now_add=True)
+    invoice_date_generated = models.DateTimeField()
     
     @property
     def total_price(self):
