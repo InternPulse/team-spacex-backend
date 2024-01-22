@@ -23,10 +23,19 @@ class PaymentTransactionSerializer(serializers.ModelSerializer):
         model = PaymentTransaction
         fields = '__all__'
 
-class InvoiceItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = InvoiceItem
-        fields = '__all__'
+class InvoiceItemSerializer(serializers.Serializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+    description = serializers.CharField()
+    quantity = serializers.IntegerField()
+    price = serializers.DecimalField(max_digits=10, decimal_places=2)
+    date_created = serializers.DateTimeField(read_only=True)
+
+    def create(self, validated_data):
+        return InvoiceItem.objects.create(**validated_data)
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
 
 class ClientContactSerializer(serializers.ModelSerializer):
     class Meta:
