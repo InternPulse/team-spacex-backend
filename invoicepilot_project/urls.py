@@ -20,5 +20,6 @@ urlpatterns = [
      path('auth/', include('djoser.urls')),  # Djoser authentication URLs
      path('auth/', include('djoser.urls.authtoken')),
      path('api/', include('invoicepilot_app.urls')),  # Include your app's URLs
+     path('api/', include('invoice_pdf.urls')),
      path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
