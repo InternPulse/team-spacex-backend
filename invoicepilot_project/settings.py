@@ -71,7 +71,8 @@ STATICFILES_STORAGE= "whitenoise.storage.CompressedManifestStaticFilesStorage"
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000", 
     "http://localhost:3000",
-    "http://localhost:5175" # Add your React frontend's URL
+    "http://localhost:5175"
+    "http://localhost:5173" # Add your React frontend's URL
     # Add more origins as needed
 ]
 
