@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'invoicepilot_app',
     'drf_yasg',
     'invoice_pdf',
+    'whitenoise.runserver_nostatic'
     
 ]
 
@@ -61,14 +62,19 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     
 ]
+
+STATICFILES_STORAGE= "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000", 
     "http://localhost:3000", # Add your React frontend's URL
     # Add more origins as needed
 ]
+
+
 
 ROOT_URLCONF = 'invoicepilot_project.urls'
 
