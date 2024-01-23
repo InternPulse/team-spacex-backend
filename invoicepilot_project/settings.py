@@ -31,7 +31,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['*', 'localhost', 'https://team-spacex-backend-mbhhb.ondigitalocean.app']
+ALLOWED_HOSTS = ['*', 'localhost', 'https://team-spacex-backend-mbhhb.ondigitalocean.app']
 
 
 # Application definition
