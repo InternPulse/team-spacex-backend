@@ -42,7 +42,7 @@ class RecurringInvoiceSchedule(models.Model):
     # Add more fields as needed
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='invoicepilot_profile')
     # Add profile fields as needed
 
 class Invoice(models.Model):
