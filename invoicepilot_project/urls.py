@@ -19,8 +19,6 @@ urlpatterns = [
      path('admin/', admin.site.urls),
      path('auth/', include('djoser.urls')),  # Djoser authentication URLs
      path('auth/', include('djoser.urls.authtoken')),
-     path('api/', include('invoicepilot_app.urls')),  # Include your app's URLs
-     path('api/', include('invoice_pdf.urls')),
      path('api/', include('customers.urls')), 
      path('api/', include('users.urls')),
      path('api/', include('invoices.urls')),
