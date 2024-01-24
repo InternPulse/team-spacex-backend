@@ -35,7 +35,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         model = User
         fields = ('username', 'password', 'email', 'full_name', 'business_name', 'business_category', 'transaction_currency')
         extra_kwargs = {'password': {'write_only': True}}
-        ref_name = 'YourUserCreateSerializer',
+   
 
     def create(self, validated_data):
         # Extract profile data from validated_data
