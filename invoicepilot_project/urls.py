@@ -22,5 +22,6 @@ urlpatterns = [
      path('api/', include('invoicepilot_app.urls')),  # Include your app's URLs
      path('api/', include('invoice_pdf.urls')),
      path('api/', include('customers.urls')), 
+     path('api/', include('users.urls')),
      path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
