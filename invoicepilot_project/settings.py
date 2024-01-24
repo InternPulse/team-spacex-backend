@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'invoice_pdf',
     'whitenoise.runserver_nostatic',
     'customers',
+    'users',
     
 ]
 
