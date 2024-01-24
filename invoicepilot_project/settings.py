@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
     'customers',
     'users',
+    'invoices',
     
 ]
 
