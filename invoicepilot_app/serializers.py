@@ -12,6 +12,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+        ref_name = 'InvoicePilotProfile'  # Set a unique ref_name for the invoicepilot_app ProfileSerializer
 
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
