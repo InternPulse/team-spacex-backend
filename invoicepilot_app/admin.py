@@ -1,10 +1,9 @@
 from django.contrib import admin
 from .models import (
-    Profile, Invoice, PaymentTransaction,
+    Invoice, PaymentTransaction,
     InvoiceItem, ClientContact, Notification,
     RecurringInvoiceSchedule, MailRecord
 )
-admin.site.register(Profile)
 admin.site.register(Invoice)
 admin.site.register(PaymentTransaction)
 admin.site.register(InvoiceItem)
