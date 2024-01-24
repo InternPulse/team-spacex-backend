@@ -10,7 +10,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class NewUserCreateSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(write_only=True)
     business_name = serializers.CharField(write_only=True)
     business_category = serializers.ChoiceField(
