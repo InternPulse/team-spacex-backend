@@ -11,8 +11,10 @@ from .views import (
     InvoiceItemListCreateView,
     ClientContactListCreateView,
     NotificationListCreateView,
-    RecurringInvoiceScheduleListCreateView,TestMailerView
+    RecurringInvoiceScheduleListCreateView,
+    TestMailerView,
 )
+from customers.views import CustomerListCreateView  # Import from the correct location
 
 urlpatterns = [
     path('signup/', SignUp.as_view(), name='signup'),
@@ -25,6 +27,7 @@ urlpatterns = [
     path('client-contacts/', ClientContactListCreateView.as_view(), name='client-contact-list-create'),
     path('notifications/', NotificationListCreateView.as_view(), name='notification-list-create'),
     path('recurring-invoice-schedules/', RecurringInvoiceScheduleListCreateView.as_view(), name='recurring-invoice-schedule-list-create'),
-    path('test-mailer/', TestMailerView.as_view(), name='test-mailer')
+    path('test-mailer/', TestMailerView.as_view(), name='test-mailer'),
+    path('customers/', CustomerListCreateView.as_view(), name='customer-list-create'),  # Add this line for the customers view
     # Add more URLs as needed
 ]

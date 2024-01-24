@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'invoicepilot_app',
     'drf_yasg',
     'invoice_pdf',
-    'whitenoise.runserver_nostatic'
+    'whitenoise.runserver_nostatic',
+    'customers',
     
 ]
 
