@@ -3,16 +3,11 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    Profile, Invoice, PaymentTransaction,
+     Invoice, PaymentTransaction,
     InvoiceItem, ClientContact, Notification,
     RecurringInvoiceSchedule
 )
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'
-        ref_name = 'InvoicePilotProfile'  # Set a unique ref_name for the invoicepilot_app ProfileSerializer
 
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:

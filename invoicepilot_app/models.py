@@ -41,9 +41,6 @@ class RecurringInvoiceSchedule(models.Model):
     frequency = models.CharField(max_length=20)
     # Add more fields as needed
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='invoicepilot_profile')
-    # Add profile fields as needed
 
 class Invoice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
