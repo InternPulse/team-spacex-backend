@@ -14,7 +14,8 @@ from .views import (
     RecurringInvoiceScheduleListCreateView,
     TestMailerView,
 )
-from customers.views import CustomerListCreateView  # Import from the correct location
+from customers.views import CustomerListCreateView 
+from users.views import SignUp, Login
 
 urlpatterns = [
     path('signup/', SignUp.as_view(), name='signup'),
