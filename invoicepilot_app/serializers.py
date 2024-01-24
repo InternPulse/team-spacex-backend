@@ -3,15 +3,11 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    Profile, Invoice, PaymentTransaction,
+     Invoice, PaymentTransaction,
     InvoiceItem, ClientContact, Notification,
     RecurringInvoiceSchedule
 )
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = '__all__'
 
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
