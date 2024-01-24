@@ -8,13 +8,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+        ref_name = 'UsersProfile'  # Set a unique ref_name for the users app ProfileSerializer
 
 class UserCreateSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'email', 'profile')  # Include 'email' in fields
+        fields = ('username', 'password', 'email', 'profile')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
