@@ -27,14 +27,15 @@ class UserCreateSerializer(serializers.ModelSerializer):
             ('technology', 'Technology'),
             # Add more choices as needed
         ],
-        write_only=True
+        write_only=True,
     )
     transaction_currency = serializers.CharField(write_only=True)
-
+    
     class Meta:
         model = User
         fields = ('username', 'password', 'email', 'full_name', 'business_name', 'business_category', 'transaction_currency')
         extra_kwargs = {'password': {'write_only': True}}
+        ref_name = 'YourUserCreateSerializer',
 
     def create(self, validated_data):
         # Extract profile data from validated_data
