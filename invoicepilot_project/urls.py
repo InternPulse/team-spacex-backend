@@ -19,7 +19,6 @@ urlpatterns = [
      path('admin/', admin.site.urls),
      path('auth/', include('djoser.urls')),  # Djoser authentication URLs
      path('auth/', include('djoser.urls.authtoken')),
-     path('api/', include('customers.urls')), 
      path('api/', include('users.urls')),
      path('api/', include('invoices.urls')),
      path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
