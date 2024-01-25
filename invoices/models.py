@@ -2,6 +2,11 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class MailRecord(models.Model):
+    invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE)
+    to = models.EmailField()
+    template_used = models.CharField(max_length=255)
+
 class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customers')
     name = models.CharField(max_length=255)
