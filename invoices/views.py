@@ -1,15 +1,41 @@
 # invoices/views.py
-from rest_framework import generics, permissions
-from rest_framework.response import Response
-from .models import Customer, Invoice, InvoiceItem
-from .serializers import CustomerSerializer, InvoiceSerializer, InvoiceItemSerializer
 from django.shortcuts import render
 from django.utils import timezone
-from reportlab.pdfgen import canvas
-from rest_framework.views import APIView
-from invoices.models import InvoiceItem  # Assuming 'invoices' is the correct app name
 from django.http import FileResponse
 from io import BytesIO
+from typing import Optional  # Add this import for Optional
+from .models import Invoice
+from .utils import send_email_with_pdf
+from rest_framework.views import APIView
+
+class SendInvoiceEmailView(APIView):
+    def post(self, request, pk):
+        try:
+            invoice = Invoice.objects.get(pk=pk)
+            subject = request.data.get('subject', 'Invoice')
+            message = request.data.get('message', 'Please find the attached invoice.')
+            pdf_content = request.data.get('pdf_content')  # You may need to handle file upload here
+            
+            # Call the function to send the email
+            success = send_email_with_pdf(subject, message, pdf_content, invoice)
+            
+            if success:
+                return Response({'detail': 'Email sent successfully.'})
+            else:
+                return Response({'detail': 'Failed to send email.'}, status=500)
+        except Invoice.DoesNotExist:
+            return Response({'detail': 'Invoice not found.'}, status=404)
+
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Customer, Invoice, InvoiceItem, MailRecord
+from .serializers import CustomerSerializer, InvoiceSerializer, InvoiceItemSerializer
+from .models import InvoiceItem as AppInvoiceItem  # Update the import based on your app name
+
+from django.core.mail import EmailMessage
+from reportlab.pdfgen import canvas
 
 class GenerateInvoicePDFView(APIView):
     def get(self, request, pk):
@@ -56,3 +82,24 @@ class InvoiceItemCreateView(generics.CreateAPIView):
         invoice_id = self.kwargs['invoice_id']
         invoice = Invoice.objects.get(pk=invoice_id)
         serializer.save(invoice=invoice)
+
+def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice: Invoice, template: Optional[str] = 'default') -> bool:
+    """Send an email containing the invoice to the customer"""
+    email = EmailMessage(
+        subject,
+        message,
+        'your-email@example.com',
+        to=[invoice.recipient.email],
+    )
+
+    if pdf_content:
+        email.attach('invoice.pdf', pdf_content, 'application/pdf')
+    sent = email.send()
+    if sent:
+        MailRecord.objects.create(
+            invoice=invoice,
+            to=invoice.recipient.email,
+            template_used=template
+        )
+        return True
+    return False
