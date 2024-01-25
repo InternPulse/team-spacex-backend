@@ -46,12 +46,10 @@ INSTALLED_APPS = [
     'djoser',
     'corsheaders',
     'rest_framework',
-    'invoicepilot_app',
     'drf_yasg',
-    'invoice_pdf',
     'whitenoise.runserver_nostatic',
-    'customers',
     'users',
+    'invoices',
     
 ]
 
@@ -169,6 +167,7 @@ SIMPLE_JWT = {
 
 #EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
+
 STATIC_ROOT='static'
 
 SWAGGER_SETTINGS = {

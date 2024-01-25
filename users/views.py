@@ -6,11 +6,11 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserCreateSerializer, UserLoginSerializer, ProfileSerializer
+from .serializers import NewUserCreateSerializer, UserLoginSerializer, ProfileSerializer, CustomerSerializer
 from django.contrib.auth import authenticate, get_user_model
 
 class SignUp(generics.CreateAPIView):
-    serializer_class = UserCreateSerializer
+    serializer_class = NewUserCreateSerializer
     permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
@@ -60,4 +60,12 @@ class CreateProfile(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+class CreateCustomer(generics.CreateAPIView):
+    serializer_class = CustomerSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Include the user field before saving the serializer
         serializer.save(user=self.request.user)

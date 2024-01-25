@@ -2,15 +2,23 @@
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Customer
+
+class CustomerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+        read_only_fields = ('user',)
 
 class ProfileSerializer(serializers.ModelSerializer):
+    customers = CustomerSerializer(many=True, read_only=True)
+
     class Meta:
         model = Profile
         fields = '__all__'
 
 
-class UserCreateSerializer(serializers.ModelSerializer):
+class NewUserCreateSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(write_only=True)
     business_name = serializers.CharField(write_only=True)
     business_category = serializers.ChoiceField(
@@ -27,14 +35,15 @@ class UserCreateSerializer(serializers.ModelSerializer):
             ('technology', 'Technology'),
             # Add more choices as needed
         ],
-        write_only=True
+        write_only=True,
     )
     transaction_currency = serializers.CharField(write_only=True)
-
+    
     class Meta:
         model = User
         fields = ('username', 'password', 'email', 'full_name', 'business_name', 'business_category', 'transaction_currency')
         extra_kwargs = {'password': {'write_only': True}}
+   
 
     def create(self, validated_data):
         # Extract profile data from validated_data
