@@ -1,7 +1,7 @@
+# invoices/utils.py
 from django.core.mail import EmailMessage
-from invoicepilot_app.models import Invoice, MailRecord
+from .models import Invoice, MailRecord
 from typing import Optional
-
 
 def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice: Invoice, template: Optional[str] = 'default') -> bool:
     """Send an email containing the invoice to the customer"""
@@ -9,7 +9,7 @@ def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice:
         subject,
         message,
         'your-email@example.com',
-        to=[invoice.recipent.email],
+        to=[invoice.recipient.email],
     )
 
     if pdf_content:
@@ -18,12 +18,8 @@ def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice:
     if sent:
         MailRecord.objects.create(
             invoice=invoice,
-            to=invoice.recipent.email,
+            to=invoice.recipient.email,
             template_used=template
         )
         return True
     return False
-
-     
-  
-   
