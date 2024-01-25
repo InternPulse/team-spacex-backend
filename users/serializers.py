@@ -1,8 +1,18 @@
 # users/serializers.py
 
 from rest_framework import serializers
-from django.contrib.auth.models import User
 from .models import Profile, Customer
+from rest_framework.serializers import (
+    ModelSerializer, Field, EmailField,
+    ValidationError, Serializer,
+    CharField
+)
+import  utils.validators as v
+from django.db.utils import IntegrityError
+from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
+
+User = get_user_model()
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -58,8 +68,11 @@ class NewUserCreateSerializer(serializers.ModelSerializer):
         email = validated_data.pop('email', None)
 
         # Create a new user
-        user = User.objects.create_user(email=email, **validated_data)
-
+        try:
+            user = User.objects.create_user(email=email, **validated_data)
+        except IntegrityError as e:
+            print(e)
+            raise ValidationError("A user with this email already exists")
         # Create a new profile for the user
         Profile.objects.create(user=user, **profile_data)
 
@@ -70,3 +83,48 @@ class NewUserCreateSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     username_or_email = serializers.CharField()
     password = serializers.CharField(write_only=True)
+
+class CustomAuthTokenSerializer(Serializer):
+    email = EmailField()
+    password = CharField()
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        password = attrs.get('password')
+        if email and password:
+            user = User.objects.filter(email=email).first()
+            if user and user.check_password(password):
+                attrs['user'] = user
+                return attrs
+            else:
+                raise ValidationError('Unable to log in with provided credentials.')
+        else:
+            raise ValidationError('Must include "email" and "password".')
+
+
+
+# class UserSerializer(ModelSerializer):
+    
+#     class Meta:
+#         model = User
+#         fields = ['email', 'username', 'first_name', 'id',
+#                   'last_name', 'created_at']
+#         read_only_fields = ['id']
+        
+class UserManageSerializer(ModelSerializer):    
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'first_name', 'id',
+                  'last_name', 'created_at',
+                ]
+        read_only_fields = ['id', 'created_at']
+
+class RequestSerializer(Serializer):
+    email = EmailField()
+
+class PasswordResetSerializer(Serializer):
+    password = CharField(validators=[v.validate_password])
+    confirm_password = CharField(validators=[v.validate_password])
+
+class EmptySerializer(Serializer):
+    pass
