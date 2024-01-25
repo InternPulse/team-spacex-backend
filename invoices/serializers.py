@@ -6,6 +6,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
         fields = '__all__'
+        ref_name = 'invoices_customer'
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:

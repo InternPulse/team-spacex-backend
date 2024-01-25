@@ -198,6 +198,7 @@ SIMPLE_JWT = {
 #EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
 TOKEN_EXPIRY = 60 * 5
+API_URL = config('API_URL', default='http://localhost:8000')
 AUTH_USER_MODEL = 'users.User'
 STATIC_ROOT='static'
 

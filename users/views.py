@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenBlacklistVi
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .backends import CustomJWTAuthentication
 from django.dispatch import receiver
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from utils.signals import verification_token_created, pwd_reset_token_created
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -19,7 +20,7 @@ from .serializers import (
     NewUserCreateSerializer,
     CustomAuthTokenSerializer, RequestSerializer, 
     PasswordResetSerializer, EmptySerializer,
-    ProfileSerializer, CustomerSerializer
+    ProfileSerializer, CustomerSerializer, UserManageSerializer
 )
 from rest_framework.status import (
     HTTP_201_CREATED,
@@ -95,7 +96,7 @@ class PasswordResetRequestView(GenericAPIView):
 
 @receiver(pwd_reset_token_created)
 def password_reset_token_created(sender, instance, token, user_email, *args, **kwargs):
-    email_plaintext_message = "{}/{}".format("http://localhost:8000/reset-password", token)
+    email_plaintext_message = "{}/auth/reset-password/{}".format(settings.API_URL, token)
 
     email = EmailMultiAlternatives(
         "Password Reset for {title}".format(title="MadChatter"),
@@ -146,7 +147,7 @@ class RequestVerificationView(GenericAPIView):
 
 @receiver(verification_token_created)
 def verification_token_mail(sender, instance, verification_token, user_email, *args, **kwargs):
-    email_plaintext_message = "{}/{}".format("http://localhost:8000/verify", verification_token)
+    email_plaintext_message = "{}/auth/activate/{}".format(settings.API_URL, verification_token)
 
     email = EmailMultiAlternatives(
         "Verification for {title}".format(title="InvoicePilot"),
@@ -185,3 +186,25 @@ class CreateCustomer(CreateAPIView):
     def perform_create(self, serializer):
         # Include the user field before saving the serializer
         serializer.save(user=self.request.user)
+        
+class UserView(GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserManageSerializer
+    
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        serializer = self.serializer_class(user)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        user = request.user
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save()
+        return Response(self.serializer_class(user).data, status=HTTP_200_OK)
+
+    def delete(self, request, *args, **kwargs):
+        user = request.user
+        user.delete()
+        return Response({}, status=HTTP_204_NO_CONTENT)

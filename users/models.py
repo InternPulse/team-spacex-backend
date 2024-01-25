@@ -9,7 +9,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=50, unique=True)
     is_verified = models.BooleanField(default=False)
-    created_at = models.DateTimeField(default=now)
     updated_at = models.DateTimeField(default=now)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

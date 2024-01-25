@@ -2,8 +2,8 @@ from rest_framework.serializers import ValidationError
 
 
 def validate_name(name: str) -> bool :
-    if len(name) < 2 or len(name) > 250:
-        raise ValidationError("Name should be between 2 and 250 characters")
+    if len(name) < 2 or len(name) > 50:
+        raise ValidationError("Name should be between 2 and 50 characters")
     # if any(["$", ""])
     
 

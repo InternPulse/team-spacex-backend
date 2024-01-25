@@ -79,11 +79,6 @@ class NewUserCreateSerializer(serializers.ModelSerializer):
         return user
 
 
-
-class UserLoginSerializer(serializers.Serializer):
-    username_or_email = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-
 class CustomAuthTokenSerializer(Serializer):
     email = EmailField()
     password = CharField()
@@ -97,27 +92,18 @@ class CustomAuthTokenSerializer(Serializer):
                 attrs['user'] = user
                 return attrs
             else:
-                raise ValidationError('Unable to log in with provided credentials.')
+                raise ValidationError('Unable to log in with provided credentials. Please use your email and password')
         else:
             raise ValidationError('Must include "email" and "password".')
 
-
-
-# class UserSerializer(ModelSerializer):
-    
-#     class Meta:
-#         model = User
-#         fields = ['email', 'username', 'first_name', 'id',
-#                   'last_name', 'created_at']
-#         read_only_fields = ['id']
         
-class UserManageSerializer(ModelSerializer):    
+class UserManageSerializer(ModelSerializer):  
+    email = EmailField(required=False)
+    username = CharField(required=False, validators=[v.validate_name])  
     class Meta:
         model = User
-        fields = ['email', 'username', 'first_name', 'id',
-                  'last_name', 'created_at',
-                ]
-        read_only_fields = ['id', 'created_at']
+        fields = ['email', 'username', 'id']
+        read_only_fields = ['id']
 
 class RequestSerializer(Serializer):
     email = EmailField()
