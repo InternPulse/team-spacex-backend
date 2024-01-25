@@ -7,6 +7,16 @@ from typing import Optional  # Add this import for Optional
 from .models import Invoice
 from .utils import send_email_with_pdf
 from rest_framework.views import APIView
+from rest_framework import generics, permissions
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import Customer, Invoice, InvoiceItem, MailRecord
+from .serializers import NewCustomerSerializer, InvoiceSerializer, InvoiceItemSerializer
+from .models import InvoiceItem as AppInvoiceItem  # Update the import based on your app name
+
+from django.core.mail import EmailMessage
+from reportlab.pdfgen import canvas
 
 class SendInvoiceEmailView(APIView):
     def post(self, request, pk):
@@ -26,16 +36,7 @@ class SendInvoiceEmailView(APIView):
         except Invoice.DoesNotExist:
             return Response({'detail': 'Invoice not found.'}, status=404)
 
-from rest_framework import generics, permissions
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from .models import Customer, Invoice, InvoiceItem, MailRecord
-from .serializers import CustomerSerializer, InvoiceSerializer, InvoiceItemSerializer
-from .models import InvoiceItem as AppInvoiceItem  # Update the import based on your app name
-
-from django.core.mail import EmailMessage
-from reportlab.pdfgen import canvas
 
 class GenerateInvoicePDFView(APIView):
     def get(self, request, pk):
@@ -60,7 +61,7 @@ class GenerateInvoicePDFView(APIView):
 
 class CustomerListCreateView(generics.ListCreateAPIView):
     queryset = Customer.objects.all()
-    serializer_class = CustomerSerializer
+    serializer_class = NewCustomerSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
