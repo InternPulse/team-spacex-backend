@@ -1,24 +1,36 @@
 # invoices/views.py
-from django.shortcuts import render
 from django.utils import timezone
 from django.http import FileResponse
 from io import BytesIO
 from typing import Optional  # Add this import for Optional
-from .models import Invoice
+from .models import Invoice, InvoiceItem, MailRecord
+from .serializers import InvoiceSerializer, InvoiceItemSerializer
 from utils.mailer import send_email_with_pdf
-from rest_framework.views import APIView
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from .models import Customer, Invoice, InvoiceItem, MailRecord
-from .serializers import NewCustomerSerializer, InvoiceSerializer, InvoiceItemSerializer
-from .models import InvoiceItem as AppInvoiceItem  # Update the import based on your app name
-
 from django.core.mail import EmailMessage
 from reportlab.pdfgen import canvas
+from rest_framework.generics import ListCreateAPIView
 
-class SendInvoiceEmailView(APIView):
+class AddInvoiceItemView(generics.CreateAPIView):
+    queryset = InvoiceItem.objects.all()
+    serializer_class = InvoiceItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            invoice_id = kwargs.get('invoice_id')
+            invoice = Invoice.objects.get(pk=invoice_id)
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(invoice=invoice)
+            return Response(serializer.data, status=201)
+        except Invoice.DoesNotExist:
+            return Response({'detail': 'Invoice not found.'}, status=404)
+
+
+class SendInvoiceEmailView(generics.APIView):
     def post(self, request, pk):
         try:
             invoice = Invoice.objects.get(pk=pk)
@@ -36,9 +48,7 @@ class SendInvoiceEmailView(APIView):
         except Invoice.DoesNotExist:
             return Response({'detail': 'Invoice not found.'}, status=404)
 
-
-
-class GenerateInvoicePDFView(APIView):
+class GenerateInvoicePDFView(generics.APIView):
     def get(self, request, pk):
         invoice_item = InvoiceItem.objects.get(pk=pk)
         invoice_item.invoice_date_generated = timezone.now()
@@ -46,28 +56,21 @@ class GenerateInvoicePDFView(APIView):
 
         pdf_buffer = BytesIO()
         pdf = canvas.Canvas(pdf_buffer)
-        pdf.drawString(100, 800, f'Customer Name: {invoice_item.owner.username}')
+        pdf.drawString(100, 800, f'Title: {invoice_item.title}')
         pdf.drawString(100, 780, f'Description: {invoice_item.description}')
         pdf.drawString(100, 760, f'Quantity: {invoice_item.quantity}')
-        pdf.drawString(100, 740, f'Price: ${invoice_item.price}')
-        pdf.drawString(100, 720, f'Date Created: {invoice_item.date_created}')
-        pdf.drawString(100, 700, f'Date Generated: {invoice_item.invoice_date_generated}')
+        pdf.drawString(100, 740, f'Unit Price: ${invoice_item.unit_price}')
+        pdf.drawString(100, 720, f'Tax: ${invoice_item.tax}')
+        pdf.drawString(100, 700, f'Subtotal: ${invoice_item.subtotal}')
+        pdf.drawString(100, 680, f'Total: ${invoice_item.total}')
         pdf.save()
         pdf_buffer.seek(0)
 
-        filename = f'{invoice_item.owner.username}_{invoice_item.description}.pdf'
+        filename = f'invoice_{invoice_item.id}.pdf'
         response = FileResponse(pdf_buffer, as_attachment=True, filename=filename)
         return response
 
-class CustomerListCreateView(generics.ListCreateAPIView):
-    queryset = Customer.objects.all()
-    serializer_class = NewCustomerSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-class InvoiceListCreateView(generics.ListCreateAPIView):
+class InvoiceListView(ListCreateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -75,12 +78,10 @@ class InvoiceListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, sender=self.request.user)
 
-class InvoiceItemCreateView(generics.CreateAPIView):
-    serializer_class = InvoiceItemSerializer
+class InvoiceCreateView(generics.CreateAPIView):
+    serializer_class = InvoiceSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        invoice_id = self.kwargs['invoice_id']
-        invoice = Invoice.objects.get(pk=invoice_id)
-        serializer.save(invoice=invoice)
+        serializer.save(user=self.request.user, sender=self.request.user)
 

@@ -49,8 +49,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'whitenoise.runserver_nostatic',
-    'users',
     'invoices',
+    'myaccount',
+    'customers'
     
 ]
 
@@ -75,6 +76,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5175",
     "http://localhost:5173", 
+    "http://localhost:8001", 
 ]
 
 CORS_ALLOW_CREDENTIALS = True

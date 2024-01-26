@@ -1,5 +1,17 @@
-# users/views.py
+from rest_framework import generics, permissions
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import NewUserCreateSerializer, ProfileSerializer, UserLoginSerializer
+from .models import Profile
 
+class CreateProfile(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from .models import BLToken, Profile 
 from django.contrib.auth import authenticate
@@ -42,27 +54,11 @@ class SignupView(CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
-
-        # Check if the user was created through the API and not the admin interface
-        if 'api' in self.request.path:
-            # Create a profile for the user if it doesn't exist
-            Profile.objects.get_or_create(user=user)
-        token = generate_otps(user.id, 'vyf')
-        verification_token_created.send(sender=self.__class__, instance=self, verification_token=token, user_email=user.email)
-        return user
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        refresh = RefreshToken.for_user(user)
-        data = {
+        return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-        }
-        return Response(data, status=HTTP_201_CREATED)
-    
+        })
+
 class LogoutView(TokenBlacklistView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (CustomJWTAuthentication,)
@@ -92,7 +88,6 @@ class PasswordResetRequestView(GenericAPIView):
             pwd_reset_token_created.send(sender=self.__class__, instance=self, token=token, user_email=user.email)
             return Response({"message": "A reset_password_token has been sent to your email"}, status=HTTP_200_OK)
         return Response({"message": "There's no user with this email"}, status=HTTP_400_BAD_REQUEST)
-
 
 @receiver(pwd_reset_token_created)
 def password_reset_token_created(sender, instance, token, user_email, *args, **kwargs):

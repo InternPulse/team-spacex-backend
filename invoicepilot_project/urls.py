@@ -12,12 +12,13 @@ schema_view = get_schema_view(
     ),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    # url='https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev' # Ignore this line
 )
 
 urlpatterns = [
      path('admin/', admin.site.urls),
+    #  path('api/', include('myaccount.urls')),
      path('auth/', include('users.urls')),
      path('api/', include('invoices.urls')),
+     path('api/', include('customers.urls')),  # Adjusted namespace
      path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

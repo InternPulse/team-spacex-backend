@@ -1,15 +1,12 @@
-# users/urls.py
-
 from django.urls import path
-from .views import CreateProfile, CreateCustomer
 from .views import (
     LoginView, LogoutView, SignupView, RefreshTokenView,
     RequestVerificationView, PasswordResetRequestView,
     PasswordResetConfirmView, VerificationConfirmView, UserView
 )
+
 urlpatterns = [
     path('create-profile/', CreateProfile.as_view(), name='create-profile'),
-    path('create-customer/', CreateCustomer.as_view(), name='create-customer'),
     path('login', LoginView.as_view(), name='login'),
     path('logout', LogoutView.as_view(), name='logout'),
     path('refresh-token', RefreshTokenView.as_view(), name='refresh-token'),
