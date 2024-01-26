@@ -16,9 +16,8 @@ schema_view = get_schema_view(
 
 urlpatterns = [
      path('admin/', admin.site.urls),
-     path('auth/', include('djoser.urls')),
-     path('auth/', include('djoser.urls.authtoken')),
-     path('api/', include('myaccount.urls')),
+    #  path('api/', include('myaccount.urls')),
+     path('auth/', include('users.urls')),
      path('api/', include('invoices.urls')),
      path('api/', include('customers.urls')),  # Adjusted namespace
      path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),

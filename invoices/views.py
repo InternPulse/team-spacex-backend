@@ -5,6 +5,7 @@ from io import BytesIO
 from typing import Optional  # Add this import for Optional
 from .models import Invoice, InvoiceItem, MailRecord
 from .serializers import InvoiceSerializer, InvoiceItemSerializer
+from utils.mailer import send_email_with_pdf
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -29,7 +30,7 @@ class AddInvoiceItemView(generics.CreateAPIView):
             return Response({'detail': 'Invoice not found.'}, status=404)
 
 
-class SendInvoiceEmailView(APIView):
+class SendInvoiceEmailView(generics.APIView):
     def post(self, request, pk):
         try:
             invoice = Invoice.objects.get(pk=pk)
@@ -47,7 +48,7 @@ class SendInvoiceEmailView(APIView):
         except Invoice.DoesNotExist:
             return Response({'detail': 'Invoice not found.'}, status=404)
 
-class GenerateInvoicePDFView(APIView):
+class GenerateInvoicePDFView(generics.APIView):
     def get(self, request, pk):
         invoice_item = InvoiceItem.objects.get(pk=pk)
         invoice_item.invoice_date_generated = timezone.now()
@@ -84,23 +85,3 @@ class InvoiceCreateView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, sender=self.request.user)
 
-def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice: Invoice, template: Optional[str] = 'default') -> bool:
-    """Send an email containing the invoice to the customer"""
-    email = EmailMessage(
-        subject,
-        message,
-        'your-email@example.com',
-        to=[invoice.recipient.email],
-    )
-
-    if pdf_content:
-        email.attach('invoice.pdf', pdf_content, 'application/pdf')
-    sent = email.send()
-    if sent:
-        MailRecord.objects.create(
-            invoice=invoice,
-            to=invoice.recipient.email,
-            template_used=template
-        )
-        return True
-    return False
