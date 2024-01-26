@@ -1,13 +1,19 @@
-# users/views.py
+#myaccount/views.py
 
 from rest_framework import generics, permissions
-from .models import Profile 
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import NewUserCreateSerializer, UserLoginSerializer, ProfileSerializer, CustomerSerializer
-from django.contrib.auth import authenticate, get_user_model
+from .serializers import NewUserCreateSerializer, ProfileSerializer, UserLoginSerializer
+from .models import Profile
+
+class CreateProfile(generics.CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class SignUp(generics.CreateAPIView):
     serializer_class = NewUserCreateSerializer
@@ -16,17 +22,10 @@ class SignUp(generics.CreateAPIView):
     def perform_create(self, serializer):
         user = serializer.save()
         refresh = RefreshToken.for_user(user)
-
-        # Check if the user was created through the API and not the admin interface
-        if 'api' in self.request.path:
-            # Create a profile for the user if it doesn't exist
-            Profile.objects.get_or_create(user=user)
-
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
-
 
 class Login(generics.CreateAPIView):
     serializer_class = UserLoginSerializer
@@ -54,18 +53,3 @@ class Login(generics.CreateAPIView):
             })
         else:
             return Response({'detail': 'Invalid credentials'}, status=401)
-
-class CreateProfile(generics.CreateAPIView):
-    serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-class CreateCustomer(generics.CreateAPIView):
-    serializer_class = CustomerSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        # Include the user field before saving the serializer
-        serializer.save(user=self.request.user)
