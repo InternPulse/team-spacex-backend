@@ -200,13 +200,15 @@ SIMPLE_JWT = {
 }
 
 #EMAIL SETTINGS
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = config("EMAIL_PORT")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-TOKEN_EXPIRY = config("TOKEN_EXPIRY")
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
+
+# Uncomment these to use live mailing service from mailgun
+# EMAIL_HOST = config("EMAIL_HOST")
+# EMAIL_PORT = config("EMAIL_PORT")
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+# TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
 API_URL = config('API_URL', default='http://localhost:8000')
@@ -222,5 +224,5 @@ SWAGGER_SETTINGS = {
             "bearerFormat": "JWT",
         },
     },
-     'DEFAULT_API_URL': "https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev" # ignore
+    #  'DEFAULT_API_URL': "https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev" # ignore
 }
