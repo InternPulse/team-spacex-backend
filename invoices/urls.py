@@ -1,17 +1,18 @@
-# invoices/urls.py
 from django.urls import path
 from .views import (
-    CustomerListCreateView,
-    InvoiceListCreateView,
-    InvoiceItemCreateView,
+    InvoiceListView,
+    InvoiceCreateView,
+    AddInvoiceItemView,  # Update this line
     GenerateInvoicePDFView,
-    SendInvoiceEmailView,  # Add the new view
+    SendInvoiceEmailView,
 )
 
+
 urlpatterns = [
-    path('customers/', CustomerListCreateView.as_view(), name='customer-list-create'),
-    path('invoices/', InvoiceListCreateView.as_view(), name='invoice-list-create'),
-    path('invoices/<int:invoice_id>/items/', InvoiceItemCreateView.as_view(), name='invoice-item-create'),
+    path('invoices/', InvoiceListView.as_view(), name='invoice-list'),
+     path('invoices/add-item/<int:invoice_id>/', AddInvoiceItemView.as_view(), name='add-invoice-item'),
+    path('invoices/create-invoice/', InvoiceCreateView.as_view(), name='invoice-create'),
+    path('invoices/<int:invoice_id>/items/', InvoiceCreateView.as_view(), name='invoice-item-create'),
     path('invoices/generate-pdf/<int:pk>/', GenerateInvoicePDFView.as_view(), name='generate-invoice-pdf'),
-    path('invoices/send-email/<int:pk>/', SendInvoiceEmailView.as_view(), name='send-invoice-email'),  # New endpoint
+    path('invoices/send-email/<int:pk>/', SendInvoiceEmailView.as_view(), name='send-invoice-email'), 
 ]

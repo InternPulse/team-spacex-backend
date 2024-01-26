@@ -31,7 +31,8 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', 'localhost', 'https://team-spacex-backend-mbhhb.ondigitalocean.app', 'https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev']
+ALLOWED_HOSTS = ['*', 'localhost', 'https://team-spacex-backend-mbhhb.ondigitalocean.app',
+ 'https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev']
 
 
 # Application definition
@@ -49,8 +50,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
     'whitenoise.runserver_nostatic',
-    'users',
     'invoices',
+    'myaccount',
+    'customers'
     
 ]
 
@@ -75,6 +77,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5175",
     "http://localhost:5173", 
+    "http://localhost:8001", 
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -155,7 +158,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'users.backends.CustomJWTAuthentication',
+        'myaccount.backends.CustomJWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -182,6 +185,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME' : timedelta(days=10),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'USER_ID_FIELD': 'id',
@@ -199,7 +203,7 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
 TOKEN_EXPIRY = 60 * 5
 API_URL = config('API_URL', default='http://localhost:8000')
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'myaccount.User'
 STATIC_ROOT='static'
 
 SWAGGER_SETTINGS = {
@@ -210,5 +214,6 @@ SWAGGER_SETTINGS = {
             "in": "header",
             "bearerFormat": "JWT",
         },
-    }
+    },
+    #  'DEFAULT_API_URL': "https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev" # ignore
 }

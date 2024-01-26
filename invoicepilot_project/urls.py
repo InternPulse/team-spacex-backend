@@ -9,15 +9,18 @@ schema_view = get_schema_view(
         title="Invoice Pilot API",
         default_version='v1',
         description="API documentation for Invoice Pilot",
-    ),
+        url="https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev/"
+
+
+),
     public=True,
     permission_classes=(permissions.AllowAny,),
-    # url='https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev' # Ignore this line
 )
 
 urlpatterns = [
      path('admin/', admin.site.urls),
-     path('auth/', include('users.urls')),
+     path('auth/', include('myaccount.urls')),
      path('api/', include('invoices.urls')),
+     path('api/', include('customers.urls')),
      path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

@@ -1,12 +1,6 @@
 # invoices/serializers.py
 from rest_framework import serializers
-from .models import Customer, Invoice, InvoiceItem
-
-class NewCustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = '__all__'
-        ref_name = 'invoices_customer'
+from .models import Invoice, InvoiceItem
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,3 +13,6 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
+
+class InvoiceEmptySerializer(serializers.Serializers):
+    pass
