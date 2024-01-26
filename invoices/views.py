@@ -8,6 +8,7 @@ from .serializers import InvoiceSerializer, InvoiceItemSerializer
 from utils.mailer import send_email_with_pdf
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from django.core.mail import EmailMessage
 from reportlab.pdfgen import canvas
@@ -30,7 +31,7 @@ class AddInvoiceItemView(generics.CreateAPIView):
             return Response({'detail': 'Invoice not found.'}, status=404)
 
 
-class SendInvoiceEmailView(generics.APIView):
+class SendInvoiceEmailView(generics.GenericAPIView):
     def post(self, request, pk):
         try:
             invoice = Invoice.objects.get(pk=pk)
@@ -48,7 +49,10 @@ class SendInvoiceEmailView(generics.APIView):
         except Invoice.DoesNotExist:
             return Response({'detail': 'Invoice not found.'}, status=404)
 
-class GenerateInvoicePDFView(generics.APIView):
+class GenerateInvoicePDFView(generics.GenericAPIView):
+    queryset = InvoiceItem.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = InvoiceEmptySerializer
     def get(self, request, pk):
         invoice_item = InvoiceItem.objects.get(pk=pk)
         invoice_item.invoice_date_generated = timezone.now()
@@ -73,14 +77,14 @@ class GenerateInvoicePDFView(generics.APIView):
 class InvoiceListView(ListCreateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, sender=self.request.user)
 
 class InvoiceCreateView(generics.CreateAPIView):
     serializer_class = InvoiceSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user, sender=self.request.user)

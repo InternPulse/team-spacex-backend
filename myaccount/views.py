@@ -1,17 +1,3 @@
-from rest_framework import generics, permissions
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import NewUserCreateSerializer, ProfileSerializer, UserLoginSerializer
-from .models import Profile
-
-class CreateProfile(generics.CreateAPIView):
-    serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from .models import BLToken, Profile 
 from django.contrib.auth import authenticate
@@ -32,7 +18,7 @@ from .serializers import (
     NewUserCreateSerializer,
     CustomAuthTokenSerializer, RequestSerializer, 
     PasswordResetSerializer, EmptySerializer,
-    ProfileSerializer, CustomerSerializer, UserManageSerializer
+    ProfileSerializer, UserManageSerializer
 )
 from rest_framework.status import (
     HTTP_201_CREATED,
@@ -43,9 +29,14 @@ from rest_framework.status import (
 )
 
 User = get_user_model()
+class CreateProfile(CreateAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 class LoginView(TokenObtainPairView):
-    pass
+    serializer_class = CustomAuthTokenSerializer
 
 
 class SignupView(CreateAPIView):
@@ -53,11 +44,20 @@ class SignupView(CreateAPIView):
     permission_classes = [AllowAny]
     def perform_create(self, serializer):
         user = serializer.save()
+        if user:
+            token = generate_otps(user.id, 'vyf')
+            verification_token_created.send(sender=self.__class__, instance=self, verification_token=token, user_email=user.email)
         refresh = RefreshToken.for_user(user)
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         })
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return self.perform_create(serializer)
+
 
 class LogoutView(TokenBlacklistView):
     permission_classes = (IsAuthenticated,)
@@ -72,7 +72,6 @@ class LogoutView(TokenBlacklistView):
 
 class RefreshTokenView(TokenRefreshView):
     pass
-
 
 class PasswordResetRequestView(GenericAPIView):
     serializer_class = RequestSerializer
@@ -167,20 +166,12 @@ class VerificationConfirmView(GenericAPIView):
         user.save()
         return Response({'status': 'success'}, status=HTTP_200_OK)
 
-class CreateProfile(CreateAPIView):
-    serializer_class = ProfileSerializer
-    permission_classes = [IsAuthenticated]
+# class CreateProfile(CreateAPIView):
+#     serializer_class = ProfileSerializer
+#     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
-class CreateCustomer(CreateAPIView):
-    serializer_class = CustomerSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        # Include the user field before saving the serializer
-        serializer.save(user=self.request.user)
+#     def perform_create(self, serializer):
+#         serializer.save(user=self.request.user)
         
 class UserView(GenericAPIView):
     permission_classes = [IsAuthenticated]

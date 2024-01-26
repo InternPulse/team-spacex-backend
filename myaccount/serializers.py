@@ -9,6 +9,8 @@ from rest_framework.serializers import (
 import  utils.validators as v
 from django.db.utils import IntegrityError
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import update_last_login
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.models import Token
 
 User = get_user_model()
@@ -23,9 +25,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-class NewUserCreateSerializer(serializers.ModelSerializer):
-    first_name = serializers.CharField(write_only=True)
-    last_name = serializers.CharField(write_only=True)
+class NewUserCreateSerializer(ModelSerializer):
+    first_name = CharField(write_only=True, validators=[v.validate_name])
+    last_name = CharField(write_only=True, validators=[v.validate_name])
+    username = CharField(validators=[v.validate_name])
+    password = CharField(validators=[v.validate_password])
     
     class Meta:
         model = User
@@ -40,29 +44,40 @@ class NewUserCreateSerializer(serializers.ModelSerializer):
 
 
 class CustomAuthTokenSerializer(Serializer):
-    email = EmailField()
-    password = CharField()
+    email = CharField(validators=[v.validate_name])
+    password = CharField(validators=[v.validate_password])
 
     def validate(self, attrs):
         email = attrs.get('email')
         password = attrs.get('password')
         if email and password:
             user = User.objects.filter(email=email).first()
+            if not user:
+                user = User.objects.filter(username=email).first()
             if user and user.check_password(password):
-                attrs['user'] = user
-                return attrs
+                result = {}
+                refresh = self.get_token(user)
+                result["refresh"] = str(refresh)
+                result["access"] = str(refresh.access_token)
+                update_last_login(None, user)
+                return result
             else:
-                raise ValidationError('Unable to log in with provided credentials. Please use your email and password')
+                raise ValidationError('Invalid email/username or password')
         else:
             raise ValidationError('Must include "email" and "password".')
-
+    
+    @classmethod
+    def get_token(cls, user) -> Token:
+        return RefreshToken.for_user(user)
         
 class UserManageSerializer(ModelSerializer):  
     email = EmailField(required=False)
     username = CharField(required=False, validators=[v.validate_name])  
+    first_name = CharField(required=False, validators=[v.validate_name])  
+    last_name = CharField(required=False, validators=[v.validate_name])  
     class Meta:
         model = User
-        fields = ['email', 'username', 'id']
+        fields = ['email', 'username', 'id', 'first_name', 'last_name']
         read_only_fields = ['id']
 
 class RequestSerializer(Serializer):
