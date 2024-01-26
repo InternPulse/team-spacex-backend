@@ -8,8 +8,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .backends import CustomJWTAuthentication
 from django.dispatch import receiver
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from utils.signals import verification_token_created, pwd_reset_token_created
+from utils.mailer import Mailer
 from rest_framework_simplejwt.tokens import RefreshToken
 from utils.encrypt import generate_otps, verify_otps
 from django.contrib.auth import get_user_model
@@ -29,6 +28,7 @@ from rest_framework.status import (
 )
 
 User = get_user_model()
+my_mailer = Mailer()
 class CreateProfile(CreateAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [IsAuthenticated]
@@ -46,7 +46,12 @@ class SignupView(CreateAPIView):
         user = serializer.save()
         if user:
             token = generate_otps(user.id, 'vyf')
-            verification_token_created.send(sender=self.__class__, instance=self, verification_token=token, user_email=user.email)
+            link = f"{settings.API_URL}/auth/activate/{token}"
+            my_mailer.send_email(
+                "Welcome to InvoicePilot",
+                user.email, "welcome",
+                {"user": user.username, "link": link}
+            )
         refresh = RefreshToken.for_user(user)
         return Response({
             'refresh': str(refresh),
@@ -84,21 +89,17 @@ class PasswordResetRequestView(GenericAPIView):
         user = User.objects.filter(email=email).first()
         if user:
             token = generate_otps(user.id, 'pwd')
+            link = f"{settings.API_URL}/auth/reset-password/{token}"
+            sent = my_mailer.send_email(
+                "Password Reset", user.email, "pwd_reset",
+                {'user': user.username, 'link': link})
             pwd_reset_token_created.send(sender=self.__class__, instance=self, token=token, user_email=user.email)
-            return Response({"message": "A reset_password_token has been sent to your email"}, status=HTTP_200_OK)
+            if sent:
+                return Response({"message": "A reset password token has been sent to your email"}, status=HTTP_200_OK)
+            else:
+                return Response({"message": "An error occurred. Please try again later"}, status=HTTP_400_BAD_REQUEST)
         return Response({"message": "There's no user with this email"}, status=HTTP_400_BAD_REQUEST)
 
-@receiver(pwd_reset_token_created)
-def password_reset_token_created(sender, instance, token, user_email, *args, **kwargs):
-    email_plaintext_message = "{}/auth/reset-password/{}".format(settings.API_URL, token)
-
-    email = EmailMultiAlternatives(
-        "Password Reset for {title}".format(title="MadChatter"),
-        email_plaintext_message,
-        "noreply@somehost.local",
-        [user_email]
-    )
-    email.send()
 
 class PasswordResetConfirmView(GenericAPIView):
     serializer_class = PasswordResetSerializer
@@ -135,21 +136,17 @@ class RequestVerificationView(GenericAPIView):
         user = User.objects.filter(email=email).first()
         if user:
             token = generate_otps(user.id, 'vyf')
-            verification_token_created.send(sender=self.__class__, instance=self, verification_token=token, user_email=user.email)
-            return Response({"message": "A verification_token has been sent to your email"}, status=HTTP_200_OK)
+            link = f"{settings.API_URL}/auth/activate/{token}"
+            sent = my_mailer.send_email(
+                "Verify your account",
+                user.email, "verify",
+                {"user": user.username, "link": link}
+            ) 
+            if sent:           
+                return Response({"message": "A verification token has been sent to your email"}, status=HTTP_200_OK)
+            else:
+                return Response({"message": "An error occurred. Please try again later"}, status=HTTP_400_BAD_REQUEST)
         return Response({"message": "There's no user with this email"}, status=HTTP_400_BAD_REQUEST)
-
-@receiver(verification_token_created)
-def verification_token_mail(sender, instance, verification_token, user_email, *args, **kwargs):
-    email_plaintext_message = "{}/auth/activate/{}".format(settings.API_URL, verification_token)
-
-    email = EmailMultiAlternatives(
-        "Verification for {title}".format(title="InvoicePilot"),
-        email_plaintext_message,
-        "noreply@somehost.local",
-        [user_email]
-    )
-    email.send()
 
 class VerificationConfirmView(GenericAPIView):
     permission_classes = [AllowAny]
