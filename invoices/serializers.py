@@ -16,3 +16,10 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 class InvoiceEmptySerializer(serializers.Serializer):
     pass
+
+from rest_framework import serializers
+
+class SendInvoiceEmailSerializer(serializers.Serializer):
+    subject = serializers.CharField(max_length=255)
+    message = serializers.CharField()
+    pdf_content = serializers.FileField()

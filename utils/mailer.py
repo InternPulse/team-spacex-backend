@@ -1,6 +1,7 @@
 # invoices/utils.py
 from django.core.mail import EmailMultiAlternatives
 from invoices.models import Invoice, MailRecord
+from django.core.mail import EmailMessage
 from typing import Optional
 from .email_templates import (
     PASSWORD_RESET, PR_TEXT,
@@ -9,7 +10,7 @@ from .email_templates import (
 )
 
 def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice: Invoice, template: Optional[str] = 'default') -> bool:
-    """Send an email containing the invoice to the customer"""
+    """Send an email containing the invoice and the generated PDF to the customer"""
     email = EmailMessage(
         subject,
         message,
@@ -28,6 +29,7 @@ def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice:
         )
         return True
     return False
+
 
 class Mailer:
     INFO_MAIL_CHOICES = {
