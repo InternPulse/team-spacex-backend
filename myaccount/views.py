@@ -10,7 +10,7 @@ from django.dispatch import receiver
 from django.conf import settings
 from utils.mailer import Mailer
 from rest_framework_simplejwt.tokens import RefreshToken
-from utils.encrypt import generate_otps, verify_otps, pwd_reset_token_created
+from utils.encrypt import generate_otps, verify_otps
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from .serializers import (
