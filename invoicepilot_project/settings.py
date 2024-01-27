@@ -77,6 +77,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5175",
     "http://localhost:5173", 
+    "http://localhost:8001", 
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -198,6 +199,13 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 }
 
+# Email config
+EMAIL_HOST = 'smtp.mailgun.org'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'invoicepilot@support.poeticverse.me'
+EMAIL_HOST_PASSWORD = 'b8e82f98825dabcd2a88bff227590b21-063062da-01a88d63'
+EMAIL_USE_TLS = True
+TOKEN_EXPIRY = 300
 
 #EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
