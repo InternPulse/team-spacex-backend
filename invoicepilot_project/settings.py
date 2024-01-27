@@ -199,24 +199,18 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 }
 
-# Email config
-EMAIL_HOST = 'smtp.mailgun.org'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'invoicepilot@support.poeticverse.me'
-EMAIL_HOST_PASSWORD = 'b8e82f98825dabcd2a88bff227590b21-063062da-01a88d63'
-EMAIL_USE_TLS = True
-TOKEN_EXPIRY = 300
+
 
 #EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
 
 # Uncomment these to use live mailing service from mailgun
-# EMAIL_HOST = config("EMAIL_HOST")
-# EMAIL_PORT = config("EMAIL_PORT")
-# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-# TOKEN_EXPIRY = config("TOKEN_EXPIRY")
+EMAIL_HOST = config("EMAIL_HOST")
+EMAIL_PORT = config("EMAIL_PORT")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
 API_URL = config('API_URL', default='http://localhost:8000')
