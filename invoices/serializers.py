@@ -14,5 +14,5 @@ class InvoiceSerializer(serializers.ModelSerializer):
         model = Invoice
         fields = '__all__'
 
-class InvoiceEmptySerializer(serializers.Serializers):
+class InvoiceEmptySerializer(serializers.ModelSerializer):
     pass
