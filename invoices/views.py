@@ -101,32 +101,43 @@ class GenerateInvoicePDFView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        invoice_item = InvoiceItem.objects.get(pk=pk)
-        invoice_item.invoice_date_generated = timezone.now()
-        invoice_item.save()
+        try:
+            invoice = Invoice.objects.get(pk=pk)
+        except Invoice.DoesNotExist:
+            return Response({'detail': 'Invoice not found.'}, status=404)
 
+        # Get all invoice items associated with the invoice
+        invoice_items = invoice.items.all()
+
+        # Create a PDF buffer
         pdf_buffer = BytesIO()
         pdf = canvas.Canvas(pdf_buffer)
         
-        title = invoice_item.invoice.title
+        # Write invoice details
+        title = invoice.title
         pdf.drawString(100, 800, f'Title: {title}')
-        
-        pdf.drawString(100, 780, f'Description: {invoice_item.description}')
-        pdf.drawString(100, 760, f'Quantity: {invoice_item.quantity}')
-        pdf.drawString(100, 740, f'Unit Price: ${invoice_item.unit_price}')
-        pdf.drawString(100, 720, f'Tax: ${invoice_item.tax}')
-        pdf.drawString(100, 700, f'Subtotal: ${invoice_item.subtotal}')
-        pdf.drawString(100, 680, f'Total: ${invoice_item.total}')
+        # Add other invoice details here
+
+        # Write invoice items details
+        y_position = 780  # Initial y-position for the first item
+        for invoice_item in invoice_items:
+            pdf.drawString(100, y_position, f'Description: {invoice_item.description}')
+            pdf.drawString(100, y_position - 20, f'Quantity: {invoice_item.quantity}')
+            pdf.drawString(100, y_position - 40, f'Unit Price: ${invoice_item.unit_price}')
+            pdf.drawString(100, y_position - 60, f'Tax: ${invoice_item.tax}')
+            pdf.drawString(100, y_position - 80, f'Subtotal: ${invoice_item.subtotal}')
+            pdf.drawString(100, y_position - 100, f'Total: ${invoice_item.total}')
+            y_position -= 120  # Adjust y-position for the next item
+
         pdf.save()
         pdf_buffer.seek(0)
 
-        filename = f'invoice_{invoice_item.id}.pdf'
+        filename = f'invoice_{invoice.id}.pdf'
         pdf_content = pdf_buffer.getvalue()
-
-        # Call the function to send the email with the PDF attached
 
         response = FileResponse(pdf_buffer, as_attachment=True, filename=filename)
         return response
+
 
 class InvoiceListView(ListCreateAPIView):
     queryset = Invoice.objects.all()
