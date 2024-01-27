@@ -77,7 +77,6 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5175",
     "http://localhost:5173", 
-    "http://localhost:8001", 
 ]
 
 CORS_ALLOW_CREDENTIALS = True
