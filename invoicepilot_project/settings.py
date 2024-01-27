@@ -202,7 +202,9 @@ SIMPLE_JWT = {
 
 
 #EMAIL SETTINGS
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
+
+
+
 
 # Uncomment these to use live mailing service from mailgun
 EMAIL_HOST = config("EMAIL_HOST")
