@@ -52,7 +52,7 @@ class SendInvoiceEmailView(generics.GenericAPIView):
 class GenerateInvoicePDFView(generics.GenericAPIView):
     queryset = InvoiceItem.objects.all()
     permission_classes = [IsAuthenticated]
-    serializer_class = InvoiceEmptySerializer
+    #serializer_class = InvoiceEmptySerializer
     def get(self, request, pk):
         invoice_item = InvoiceItem.objects.get(pk=pk)
         invoice_item.invoice_date_generated = timezone.now()
