@@ -1,16 +1,13 @@
 # invoices/models.py
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from customers.models import Customer
+User = get_user_model()
 
 class MailRecord(models.Model):
     invoice = models.ForeignKey('Invoice', on_delete=models.CASCADE)
     to = models.EmailField()
     template_used = models.CharField(max_length=255)
-
-class Customer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='customers')
-    name = models.CharField(max_length=255)
-    email = models.EmailField()
 
 class Invoice(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='invoices')
