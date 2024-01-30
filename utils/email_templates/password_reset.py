@@ -108,11 +108,13 @@ PASSWORD_RESET = """<!DOCTYPE html>
         <a href="{link}"><button class="button">Reset your password</button></a>
         <p>Best regards,<br>Invoicepilot Team</p>
         <div class="socials">
-            <a href="https://twitter.com/InternPulse" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"></a>
-            <a href="https://www.instagram.com/internpulse/" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"></a>
-            <a href="https://www.facebook.com/InternPulse" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="Facebook"></a>
+            <a href="https://twitter.com/InternPulseHQ" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"></a>
+            <a href="https://www.instagram.com/InternPulse/" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/instagram-new.png" alt="Instagram"></a>
+            <a href="https://facebook.com/internpulsehq/" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/facebook-new.png" alt="Facebook"></a>
             <a href="https://www.linkedin.com/company/internpulse" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/linkedin.png" alt="LinkedIn"></a>
-            <a href="mailto:internpulse@gmail.com"><img src="https://img.icons8.com/fluent/48/000000/gmail.png" alt="Gmail"></a>        </div>
+            <a href="mailto:internpulsehq@gmail.com"><img src="https://img.icons8.com/fluent/48/000000/gmail.png" alt="Gmail"></a>
+            <a href="https://internpulse.com"><img src="https://img.icons8.com/ios/50/000000/internet--v1.png" alt="Web"></a>
+        </div>
     </div>
 </body>
 </html>"""

@@ -9,7 +9,7 @@ schema_view = get_schema_view(
         title="Invoice Pilot API",
         default_version='v1',
         description="API documentation for Invoice Pilot",
-        url="https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev/"
+        url="https://psychic-meme-5j5657xvpw5297q-8000.app.github.dev/"
 
 
 ),
