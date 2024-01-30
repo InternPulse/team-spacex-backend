@@ -207,6 +207,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.
 # TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
+
 API_URL = config('API_URL', default='http://localhost:8000')
 AUTH_USER_MODEL = 'myaccount.User'
 STATIC_ROOT='static'

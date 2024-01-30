@@ -1,11 +1,6 @@
 # invoices/serializers.py
 from rest_framework import serializers
-from .models import Customer, Invoice, InvoiceItem
-
-class NewCustomerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Customer
-        fields = '__all__'
+from .models import Invoice, InvoiceItem
 
 class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:
@@ -18,3 +13,13 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
         fields = '__all__'
+
+class InvoiceEmptySerializer(serializers.Serializer):
+    pass
+
+from rest_framework import serializers
+
+class SendInvoiceEmailSerializer(serializers.Serializer):
+    subject = serializers.CharField(max_length=255)
+    message = serializers.CharField()
+    pdf_content = serializers.FileField()
