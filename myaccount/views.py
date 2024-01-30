@@ -46,7 +46,7 @@ class SignupView(CreateAPIView):
         user = serializer.save()
         if user:
             token = generate_otps(user.id, 'vyf')
-            link = f"{settings.API_URL}/auth/activate/{token}"
+            link = f"{settings.FE_URL}/auth/activate/{token}"
             my_mailer.send_email(
                 "Welcome to InvoicePilot",
                 user.email, "welcome",
@@ -89,11 +89,10 @@ class PasswordResetRequestView(GenericAPIView):
         user = User.objects.filter(email=email).first()
         if user:
             token = generate_otps(user.id, 'pwd')
-            link = f"{settings.API_URL}/auth/reset-password/{token}"
+            link = f"{settings.FE_URL}/auth/reset-password/{token}"
             sent = my_mailer.send_email(
                 "Password Reset", user.email, "pwd_reset",
                 {'user': user.username, 'link': link})
-            pwd_reset_token_created.send(sender=self.__class__, instance=self, token=token, user_email=user.email)
             if sent:
                 return Response({"message": "A reset password token has been sent to your email"}, status=HTTP_200_OK)
             else:
@@ -136,7 +135,7 @@ class RequestVerificationView(GenericAPIView):
         user = User.objects.filter(email=email).first()
         if user:
             token = generate_otps(user.id, 'vyf')
-            link = f"{settings.API_URL}/auth/activate/{token}"
+            link = f"{settings.FE_URL}/auth/activate/{token}"
             sent = my_mailer.send_email(
                 "Verify your account",
                 user.email, "verify",
