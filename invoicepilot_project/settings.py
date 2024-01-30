@@ -200,16 +200,15 @@ SIMPLE_JWT = {
 }
 
 #EMAIL SETTINGS
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.console.EmailBackend'
-else:
-    # Uncomment these to use live mailing service from mailgun
-    EMAIL_HOST = config("EMAIL_HOST")
-    EMAIL_PORT = config("EMAIL_PORT")
-    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-    EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-    TOKEN_EXPIRY = config("TOKEN_EXPIRY")
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.console.EmailBackend'
+# The above will be changed later on
+# Uncomment these to use live mailing service from mailgun
+# EMAIL_HOST = config("EMAIL_HOST")
+# EMAIL_PORT = config("EMAIL_PORT")
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+# TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
 
@@ -226,5 +225,5 @@ SWAGGER_SETTINGS = {
             "bearerFormat": "JWT",
         },
     },
-    #  'DEFAULT_API_URL': "https://psychic-meme-5j5657xvpw5297q-8000.app.github.dev" # ignore
+    # 'DEFAULT_API_URL': "https://psychic-meme-5j5657xvpw5297q-8000.app.github.dev" # ignore
 }
