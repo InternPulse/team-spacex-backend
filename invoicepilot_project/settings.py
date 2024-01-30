@@ -27,10 +27,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = ['*', 'localhost', 'https://team-spacex-backend-mbhhb.ondigitalocean.app',
  'https://reimagined-memory-qj6r65pvrrrcxpw6-8000.app.github.dev']
 
@@ -203,12 +199,12 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.console.EmailBackend'
 
 # Uncomment these to use live mailing service from mailgun
-EMAIL_HOST = config("EMAIL_HOST")
-EMAIL_PORT = config("EMAIL_PORT")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-TOKEN_EXPIRY = config("TOKEN_EXPIRY")
+# EMAIL_HOST = config("EMAIL_HOST")
+# EMAIL_PORT = config("EMAIL_PORT")
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+# TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
 API_URL = config('API_URL', default='http://localhost:8000')
