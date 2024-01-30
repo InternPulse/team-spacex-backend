@@ -147,8 +147,66 @@ td, th {
 .invoice-table .header {
     border: 1px solid rgba(236, 162, 108, 1);
 }
-/* th {
-    font-weight: 800;
-    text-align: left;
-    border-bottom: 1px solid black;
-} */
+footer {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    width: 100%;
+    font-family: var(--font1);
+    height: 40px;
+    position: absolute;
+    bottom: 0%;
+    gap: 30px;
+
+}
+.f1, .f2 {
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    color: white;
+    position: relative;
+}
+.f0 {
+    display: inline-block;
+    height: 100%;
+    position: absolute;
+    right: -11px;
+    width: 30px;
+    transform: skew(-30deg);
+    background-color: var(--sec);
+}
+.ava {
+    left: -11px;
+    right: none;
+    background-color: var(--pri);
+}
+.f1 {
+    background-color: var(--sec);
+}
+.f2 {
+    background-color: var(--pri);
+}
+.results {
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 0;
+}
+.total {
+    font-size: 13px;
+    /* border-collapse: collapse; */
+}
+.total td {
+    padding: 5px;
+}
+.st, .Total {
+    font-size: 15px;
+    font-weight: 700;
+}
+.Total {
+    margin-top: 10px;
+}
