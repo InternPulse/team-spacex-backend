@@ -28,7 +28,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ["*"]
 
-
+print(DEBUG)
 # Application definition
 
 INSTALLED_APPS = [
@@ -102,8 +102,15 @@ WSGI_APPLICATION = 'invoicepilot_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config("DB_PASSWORD"),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+        'OPTIONS': {
+            'sql_mode': 'STRICT_ALL_TABLES',
+        },
     }
 }
 
@@ -193,15 +200,16 @@ SIMPLE_JWT = {
 }
 
 #EMAIL SETTINGS
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.console.EmailBackend'
-# The above will be changed later on
-# Uncomment these to use live mailing service from mailgun
-# EMAIL_HOST = config("EMAIL_HOST")
-# EMAIL_PORT = config("EMAIL_PORT")
-# EMAIL_HOST_USER = config("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
-# EMAIL_USE_TLS = config("EMAIL_USE_TLS")
-# TOKEN_EXPIRY = config("TOKEN_EXPIRY")
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.console.EmailBackend'
+else:
+    # Uncomment these to use live mailing service from mailgun
+    EMAIL_HOST = config("EMAIL_HOST")
+    EMAIL_PORT = config("EMAIL_PORT")
+    EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = config("EMAIL_USE_TLS")
+    TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
 
@@ -218,5 +226,5 @@ SWAGGER_SETTINGS = {
             "bearerFormat": "JWT",
         },
     },
-    # 'DEFAULT_API_URL': "https://psychic-meme-5j5657xvpw5297q-8000.app.github.dev" # ignore
+    #  'DEFAULT_API_URL': "https://psychic-meme-5j5657xvpw5297q-8000.app.github.dev" # ignore
 }
