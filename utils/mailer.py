@@ -6,18 +6,31 @@ from django.core.mail import EmailMessage
 from .email_templates import (
     PASSWORD_RESET, PR_TEXT,
     VERIFY_ACCOUNT, VA_TEXT,
-    WELCOME, W_TEXT
+    WELCOME, W_TEXT,
+    INVOICE, INVOICE_TEXT
 )
 
-def send_email_with_pdf(subject: str, message: str, pdf_content: bytes, invoice: Invoice, template: Optional[str] = 'default') -> bool:
+def send_email_with_pdf(subject: str, pdf_content: bytes, invoice: Invoice, template: Optional[str] = 'default') -> bool:
     """Send an email containing the invoice to the customer"""
-    email = EmailMessage(
+    email = EmailMultiAlternatives(
         subject,
-        message,
-        'your-email@example.com',
+        INVOICE_TEXT.format(
+            created=invoice.date_created,
+            due=invoice.date_due,
+            user=invoice.recipient.name,
+            company=invoice.company.name,
+            company_email=invoice.company.email,
+            company_phone=invoice.company.phone,
+        ),
+        'invoicepilot@support.poeticverse.me',
         to=[invoice.recipient.email],
     )
-
+    email.attach_alternative(INVOICE.format(
+        user=invoice.recipient.name,
+        company=invoice.company.name,
+        company_email=invoice.company.email,
+        company_phone=invoice.company.phone,
+    ), "text/html")
     if pdf_content:
         email.attach('invoice.pdf', pdf_content, 'application/pdf')
     sent = email.send()

@@ -1,10 +1,11 @@
-VERIFY_ACCOUNT = """<!DOCTYPE html>
+INVOICE = """
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify your email</title>
+    <title>Invoice Notification</title>
     <style>
         @import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700&display=swap');
         * {{
@@ -102,20 +103,21 @@ VERIFY_ACCOUNT = """<!DOCTYPE html>
 
 <body>
     <div class="container">
-        <h1>Verify your account</h1>
+        <h1>Invoice Notice</h1>
         <p>Hi {user},</p>
-        <p>You haven't verified your account? Please verify your account in order to gain full access to all of
-            InvoicePilot's amazing features. Remember all unverified accounts will be deleted 14 days after creation
-            Tap the button below to verify your email.
+        <p>
+            You're receiving this email because you had some transactions with {company}
+            on {created} recently and
+            either made use of their services or purchased some of their products.
+            Attached to this email is your invoice for the transaction. Please remember that this bill
+            is due on {due}
         </p>
-        <a href="{link}"><button class="button">Verify Your Email</button></a>
-        <ul>
-            If you:
-            <li>Have already verified your email</li>
-            <li>Didn't request for a verification link or</li>
-            <li>Didn't ask for this email</li>
-            you can safely ignore this email.
-        </ul>
+        <p>
+            If you believe that this is a mistake and you haven't had any transactions
+             with {company} recently, Send them an email at {company_email} or 
+             call them on {company_phone}. If you feel that you have been scammed,
+             contact us on any of our platforms below
+        </p>
         <p>Best regards,<br>Invoicepilot Team</p>
         <div class="socials">
             <a href="https://twitter.com/InternPulseHQ" target="_blank"><img src="https://img.icons8.com/fluent/48/000000/twitter.png" alt="Twitter"></a>
@@ -127,17 +129,22 @@ VERIFY_ACCOUNT = """<!DOCTYPE html>
         </div>
     </div>
 </body>
-</html>"""
-VA_TEXT = """Verify your account
-Hi {user},
-You haven't verified your account? Please verify your account in order to gain full access to all of \
-InvoicePilot's amazing features. Remember all unverified accounts will be deleted 14 days after creation.\
-Click on the link below to verify your email.
-{link}
-If you:
-    Have already verified your email
-    Didn't request for a verification link or
-    Didn't ask for this email
-    you can safely ignore this email.
-Best regards, Invoicepilot Team
+</html>
+"""
+INVOICE_TEXT = """Verify your account
+    Hi {user},
+You're receiving this email because you had some transactions with {company} recently on {created} and \
+either made use of their services or purchased some of their products.
+Attached to this email is your invoice for the transaction. Please remember that this transaction is due on {due}
+If you believe that this is a mistake and you haven't had any transactions \
+with {company} recently, Send them an email at {company_email} or \
+call them on {company_phone}. If you feel that you have been scammed, \
+contact us on any of our platforms below.
+Best regards,
+Invoicepilot Team
+
+Twitter: https://twitter.com/InternPulseHQ
+Instagram: https://www.instagram.com/InternPulse/
+Facebook: https://facebook.com/internpulsehq/
+LinkedIn: https://www.linkedin.com/company/internpulse
 """
