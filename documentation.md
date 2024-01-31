@@ -80,14 +80,20 @@ The API uses token-based authentication. To authenticate, obtain a token by call
 - **Response (List):**
   - List of invoices.
 
-### Dashboard
+## Dashboard
 
-- **Endpoint:** `GET /dashboard/`
-- **Description:** Retrieve the user's dashboard with the latest invoices.
+### Dashboard Metrics
+
+- **Endpoint:** `GET /api/dashboard/metrics/`
+- **Description:** Retrieve the user's dashboard metrics, including total receivables, total sales, overdue invoices, and total receipts.
 - **Authentication:** Required (Token)
+- **Request:**
+  - Header:
+    ```
+    Authorization: Bearer <access_token>
+    ```
 - **Response:**
-  - Latest invoices.
-
+  - Dashboard metrics data.
 ...
 
 # Additional Endpoints
