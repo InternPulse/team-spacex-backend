@@ -73,7 +73,7 @@ CORS_ALLOWED_ORIGINS=[
     "http://localhost:5175",
     "http://localhost:5173",
     "http://localhost:8001",
-    "https://team-spacex-frontend.netlify.app",
+    "https://invoicepilot.netlify.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -210,7 +210,6 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = config("EMAIL_USE_TLS")
 TOKEN_EXPIRY = config("TOKEN_EXPIRY")
-
 
 
 FE_URL = config('FE_URL', default='http://localhost:8000')
