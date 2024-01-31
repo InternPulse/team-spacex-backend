@@ -1,8 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poller+One&family=Rubik+Doodle+Shadow&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Poller+One&family=Ubuntu:wght@500&display=swap');
 :root {
     --font1:'Inter', sans-serif;
     --font2:'Poller One', serif;
-    --font3:'Rubik Doodle Shadow', system-ui;
+    --font3:'Ubuntu', sans-serif;
     --pri: #144EAC;
     --sec: rgba(0, 0, 0, 1);
     --bg: white;
@@ -21,81 +21,43 @@ body {
     color: #666666;
 
 }
-.head {
-    height: 70px;
-    overflow: hidden;
-    display: flex;
-    width: fit-content;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    position: relative;
-    width: 220px;
+.logo{
+    height: 30px;
+    margin-right: 30px;
 }
 
-.line {
-    display: inline-block;
-    width: 7px;
-    border:none;
-    outline: none;
-    height: 100px;
-    transform: rotate(30deg);
-    position: absolute;
-    left: 55px;
-    top: -10px;
-    z-index: 1;
-    background: var(--bg);
-}
-.l1 {
-    display: inline-block;
-    width: 130px;
-    height: 70px;
-    background: var(--pri);
-    font-family: var(--font1);
-    font-size: 20px;
-    font-weight: 800;
-    position: absolute;
-    transform: rotate(-60deg);
-    text-align: center;
-    color: white;
-    /* left: 0; */
-
-}
-.l2 {
-    display: flex;
-    flex-flow: row;
-    align-items: center;
-    width: 150px;
-    height: 70px;
-    background: var(--pri);
-    font-family: var(--font1);
-    font-size: 20px;
-    font-weight: 800;
-    color: white;
-    padding-left: 20px;
-    position: absolute;
-    right: 0;
-}
 header {
     display: flex;
     flex-flow: row;
     top: 0;
+    height: 60px;
     width: 100vw;
     align-items: center;
     justify-content: space-between;
     overflow: hidden;
+}
+h2 {
+    font-family: var(--font1);
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--pri);
+}
+.particulars h2 {
+    margin-top: 20px;
 }
 h1 {
     font-family: var(--font2);
     font-size: 24px;
     margin-left: 30px;
     font-weight: 400;
+    color: var(--pri);
     text-transform: uppercase;
 }
 .divider {
-    width: 80%;
-    height: 30px;
+    width: 100%;
+    height: 1px;
     z-index: 2;
-    background: var(--sec);
+    background: var(--pri);
 }
 main {
     padding: 20px 50px;
@@ -108,13 +70,20 @@ ul {
     flex-flow: row;
     width: 100%;
     justify-content: space-between;
-    font-family: var(--font1);
+    font-family: var(--font3);
+    font-size: 13.5px;
+    font-weight: 600;
+}
+.particulars .vals {
+    font-weight: 300;
 }
 .invoice-id {
     display: flex;
     flex-flow: row;
     justify-content: space-between;
     width: 200px;
+    font-size: 14px;
+    font-weight: 300;
     margin-bottom: 20px;
 }
 .invoice-id span {
@@ -125,6 +94,9 @@ ul {
     width: 100%;
     margin-top: 40px;
     border-collapse: collapse;
+    border-top: 1px solid var(--pri);
+    border-bottom: 1px solid var(--pri);
+    
 }
 .invoice-table th:nth-child(1) {
     width: 40%;
@@ -137,7 +109,6 @@ ul {
 .invoice-table tr {
     text-align: left;
     font-size: 16px;
-    border-bottom: 1px solid var(--sec);
     margin: 10px 0;
     height: 30px;
 }
@@ -145,7 +116,12 @@ td, th {
     padding: 0 10px;
 }
 .invoice-table .header {
-    border: 1px solid rgba(236, 162, 108, 1);
+    font-family: var(--font3);
+    font-size: 16px;
+    font-weight: 800;
+}
+.particulars .cmp {
+    margin-top: 0;
 }
 footer {
     display: flex;
@@ -154,33 +130,17 @@ footer {
     width: 100%;
     font-family: var(--font1);
     height: 40px;
-    position: absolute;
-    bottom: 0%;
-    gap: 30px;
-
+    position: fixed;
+    bottom: 0;
 }
 .f1, .f2 {
     display: flex;
     flex-flow: row;
     align-items: center;
     justify-content: center;
-    width: 100%;
+    width: 50%;
     color: white;
     position: relative;
-}
-.f0 {
-    display: inline-block;
-    height: 100%;
-    position: absolute;
-    right: -11px;
-    width: 30px;
-    transform: skew(-30deg);
-    background-color: var(--sec);
-}
-.ava {
-    left: -11px;
-    right: none;
-    background-color: var(--pri);
 }
 .f1 {
     background-color: var(--sec);
@@ -194,7 +154,7 @@ footer {
     flex-flow: row;
     justify-content: flex-end;
     align-items: center;
-    margin: 20px 0;
+    margin: 50px 0;
 }
 .total {
     font-size: 13px;

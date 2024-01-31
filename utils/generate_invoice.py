@@ -1,5 +1,15 @@
 from weasyprint import HTML
+from pdfkit import from_string
+
 from jinja2 import Environment, FileSystemLoader
+
+# def generate_invoice(values, no: int = 0):
+#     env = Environment(loader=FileSystemLoader('./invoice_templates'))
+#     template = env.get_template(f'index.html')
+#     html_content = template.render(values)
+
+#     # Convert the HTML content to PDF
+#     HTML(string=html_content).write_pdf('output.pdf')
 
 def generate_invoice(values, no: int = 0):
     env = Environment(loader=FileSystemLoader('./invoice_templates'))
@@ -7,7 +17,7 @@ def generate_invoice(values, no: int = 0):
     html_content = template.render(values)
 
     # Convert the HTML content to PDF
-    HTML(string=html_content).write_pdf('output.pdf')
+    from_string(html_content, 'output.pdf')
 
 if __name__ == "__main__":
     # Specify template variables
