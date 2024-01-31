@@ -39,7 +39,15 @@ class NewUserCreateSerializer(ModelSerializer):
     def create(self, validated_data):
         first_name = validated_data.pop('first_name', '')
         last_name = validated_data.pop('last_name', '')
-        user = User.objects.create_user(**validated_data, first_name=first_name, last_name=last_name)
+        try:
+            user = User.objects.create_user(**validated_data, first_name=first_name, last_name=last_name)
+        except IntegrityError as e:
+            if 'email' in str(e):
+                raise ValidationError('User with this email already exists')
+            elif 'username' in str(e):
+                raise ValidationError('User with this username already exists')
+            else:
+                raise ValidationError('Invalid data')
         return user
 
 
@@ -79,6 +87,17 @@ class UserManageSerializer(ModelSerializer):
         model = User
         fields = ['email', 'username', 'id', 'first_name', 'last_name']
         read_only_fields = ['id']
+    
+    def update(self, instance, validated_data):
+        try:
+            return super().update(instance, validated_data)
+        except IntegrityError as e:
+            if 'username' in str(e):
+                raise ValidationError('A user with this username already exists')
+            elif 'email' in str(e):
+                raise ValidationError('A user with this email already exists')
+            else:
+                raise ValidationError('Invalid data')
 
 class RequestSerializer(Serializer):
     email = EmailField()

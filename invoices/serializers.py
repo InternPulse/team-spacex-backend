@@ -20,6 +20,5 @@ class InvoiceEmptySerializer(serializers.Serializer):
 from rest_framework import serializers
 
 class SendInvoiceEmailSerializer(serializers.Serializer):
-    subject = serializers.CharField(max_length=255)
-    message = serializers.CharField()
+    subject = serializers.CharField(max_length=255, required=False, default='Invoice Notification')
     pdf_content = serializers.FileField()

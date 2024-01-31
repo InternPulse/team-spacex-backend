@@ -162,12 +162,6 @@ class VerificationConfirmView(GenericAPIView):
         user.save()
         return Response({'status': 'success'}, status=HTTP_200_OK)
 
-# class CreateProfile(CreateAPIView):
-#     serializer_class = ProfileSerializer
-#     permission_classes = [IsAuthenticated]
-
-#     def perform_create(self, serializer):
-#         serializer.save(user=self.request.user)
         
 class UserView(GenericAPIView):
     permission_classes = [IsAuthenticated]
