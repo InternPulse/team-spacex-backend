@@ -212,7 +212,7 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS")
 TOKEN_EXPIRY = config("TOKEN_EXPIRY")
 
 
-FE_URL = config('FE_URL', default='http://localhost:8000')
+FE_URL = config('FE_URL', default='https://invoicepilot.netlify.app')
 AUTH_USER_MODEL = 'myaccount.User'
 STATIC_ROOT='static'
 
