@@ -44,7 +44,7 @@ PASSWORD_RESET = """<!DOCTYPE html>
             .container {{
                 background-color: #666;
                 color: whitesmoke;
-            }
+            }}
             h1 {{
                 color: white;
             }}

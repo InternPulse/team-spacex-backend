@@ -129,10 +129,12 @@ class RequestVerificationView(GenericAPIView):
     authentication_classes = []
     permission_classes = [AllowAny]
     def post(self, request):
+        print("yay")
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
         user = User.objects.filter(email=email).first()
+        print("User found")
         if user:
             token = generate_otps(user.id, 'vyf')
             link = f"{settings.FE_URL}/auth/activate/{token}"
