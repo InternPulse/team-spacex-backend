@@ -1,8 +1,8 @@
 from django.db import models
-from django.conf import settings
+from django.contrib.auth.models import User
 
 class DashboardData(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     total_receivables = models.IntegerField(default=0)
     total_sales = models.IntegerField(default=0)
     overdue_invoices = models.IntegerField(default=0)
